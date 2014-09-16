@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+
+<change-set release="1.0">
+    <change number="1">
+        <description>
+            Create Version Table.
+        </description>
+        <sql separator=";">
+			create table db_version (
+				release_name varchar(255) not null,
+				ver numeric default 0 not null
+			);
+        </sql>
+    </change>
+    
+    <change number="2">
+        <description>
+            Create Basic Tables.
+        </description>
+        <sql separator=";">
+            create table role (
+                authority varchar(40) not null,
+                constraint pk_authority primary key (authority)
+            );
+
+            create table user (
+                username varchar(255) not null,
+                email varchar(255) null,
+                enabled bit default 0 not null,
+                mobile varchar(255) null,
+                name varchar(255) null,
+                password varchar(255) null,
+                verify_code varchar(255) null,
+                constraint pk_username primary key (username),
+                constraint uk_email unique (email),
+                constraint uk_mobile unique (mobile)
+            );
+
+            create table user_role (
+                user_username varchar(255) not null,
+                roles_authority varchar(40) not null,
+                constraint pk_user_username primary key (user_username),
+                constraint fk_user_username foreign key (user_username)
+                    references user (username),
+                constraint fk_roles_authority foreign key (roles_authority)
+                    references role (authority)
+            );
+
+            create table location (
+                location_id bigint(20) not null auto_increment,
+                address varchar(255) not null,
+                city varchar(255) not null,
+                country varchar(255) not null,
+                currency varchar(3) null,
+                name varchar(255) not null,
+                price decimal(4,2) not null,
+                state varchar(255) not null,
+                zip varchar(255) not null,
+                constraint pk_location_id primary key (location_id)
+            );
+
+            create table payment_card (
+                id bigint(20) not null auto_increment,
+                address varchar(255) null,
+                country varchar(255) null,
+                county varchar(255) null,
+                expiry_month int(11) not null,
+                expiry_year int(11) not null,
+                number varchar(255) null,
+                postal_code varchar(255) null,
+                preferred bit default 0,
+                state varchar(255) null,
+                type varchar(255) null,
+                user varchar(255) null,
+                constraint pk_payment_card_id primary key (id),
+                constraint fk_payment_card_user foreign key (user)
+                    references user (username)
+            );
+
+            create table vehicle (
+                id bigint(20) not null auto_increment,
+                brand varchar(255) not null,
+                color varchar(255) not null,
+                license varchar(255) null,
+                preferred bit default 0,
+                user varchar(255) null,
+                constraint pk_vehicle_id primary key (id),
+                constraint fk_vehicle_user foreign key (user)
+                    references user (username)
+            );
+
+            create table booking (
+                id bigint(20) not null auto_increment,
+                confirmation bit default 0,
+                end_date datetime null,
+                formatted_id varchar(255) null,
+                reminder bit default 0,
+                start_date datetime null,
+                card bigint(20) null,
+                location bigint(20) null,
+                user varchar(255) null,
+                vehicle bigint(20) null,
+                constraint pk_booking_id primary key (id),
+                constraint fk_booking_user foreign key (user)
+                    references user (username),
+                constraint fk_booking_location foreign key (location)
+                    references location (location_id),
+                constraint fk_booking_vehicle foreign key (vehicle)
+                    references vehicle (id),
+                constraint fk_booking_card foreign key (card)
+                    references payment_card (id)
+            );
+        </sql>
+        <rollback>
+			<sql separator=";">
+				drop table booking;
+				drop table vehicle;
+				drop table payment_card;
+				drop table location;
+				drop table user_role;
+				drop table user;
+				drop table role;
+			</sql>
+        </rollback>
+    </change>
+
+</change-set>
