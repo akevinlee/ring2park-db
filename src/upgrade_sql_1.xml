@@ -146,4 +146,39 @@
 		</rollback>
     </change>
 
+	<change number="4">
+        <description>
+            Increase length of content field.
+        </description>
+        <sql separator=";">
+			alter table news
+				modify content varchar(4000) not null;
+        </sql>
+		<rollback>
+			<sql>
+				alter table news
+                modify content varchar(255) not null;
+			</sql>
+		</rollback>
+    </change>
+
+    <change number="5">
+        <description>
+            Add Currency Table.
+        </description>
+        <sql separator=";">
+            create table currency (
+                id bigint(20) not null auto_increment,
+                symbol varchar(3) not null,
+                rate decimal(5,2) null,
+                constraint pk_currency_id primary key (id)
+            );
+        </sql>
+        <rollback>
+            <sql>
+                drop table currency;
+            </sql>
+        </rollback>
+    </change>
+
 </change-set>
