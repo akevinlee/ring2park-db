@@ -43,9 +43,9 @@
     <property name="upgrade.password" value="ring2park_int"/>
 
     <!-- These properties define how the updater checks and manipulates the version in the DB_VERSION table -->
-    <property name="upgrade.currentVersionSql" value="SELECT VER FROM DB_VERSION WHERE RELEASE_NAME=?"/>
-    <property name="upgrade.deleteVersionSql" value="DELETE FROM DB_VERSION WHERE RELEASE_NAME=?"/>
-    <property name="upgrade.updateVersionSql" value="INSERT INTO DB_VERSION (RELEASE_NAME, VER) VALUES (?, ?)"/>
+    <property name="upgrade.currentVersionSql" value="select ver from db_version where release_name=?"/>
+    <property name="upgrade.deleteVersionSql" value="delete from db_version where release_name=?"/>
+    <property name="upgrade.updateVersionSql" value="insert into db_version (release_name, ver) values (?, ?)"/>
 
     <!-- ###################################################################
           Main Targets
